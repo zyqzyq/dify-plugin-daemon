@@ -1,7 +1,7 @@
 FROM golang:1.25-alpine AS builder
 
 ARG VERSION=unknown
-
+ENV GOPROXY=https://goproxy.cn,direct
 # Install ca-certificates and timezone data for final stage
 RUN apk add --no-cache ca-certificates tzdata && \
     apk add --upgrade --force-refresh busybox 
