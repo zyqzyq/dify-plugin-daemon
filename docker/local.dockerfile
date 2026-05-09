@@ -10,7 +10,7 @@ COPY . /app
 WORKDIR /app
 
 # using goproxy if you have network issues
-# ENV GOPROXY=https://goproxy.cn,direct
+ENV GOPROXY=https://goproxy.cn,direct
 
 # build
 RUN go build \
