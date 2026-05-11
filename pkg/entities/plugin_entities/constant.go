@@ -26,6 +26,8 @@ const (
 	ARRAY               = "array"
 	OBJECT         = "object"
 	CHECKBOX       = "checkbox"
+	DATE           = "date"
+	DATE_PICKER    = "date-picker"
 )
 
 type ParameterOption struct {
