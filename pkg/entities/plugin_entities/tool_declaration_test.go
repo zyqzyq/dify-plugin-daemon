@@ -1300,6 +1300,176 @@ tools:
 	}
 }
 
+func TestToolParameterResetOnChange_Validate(t *testing.T) {
+	const jsonData = `
+{
+	"identity": {
+		"author": "author",
+		"name": "name",
+		"description": {
+			"en_US": "description"
+		},
+		"icon": "icon",
+		"label": {
+			"en_US": "label"
+		},
+		"tags": []
+	},
+	"credentials_schema": [],
+	"tools": [
+		{
+			"identity": {
+				"author": "author",
+				"name": "tool",
+				"label": {
+					"en_US": "label"
+				}
+			},
+			"description": {
+				"human": {
+					"en_US": "description"
+				},
+				"llm": "description"
+			},
+			"parameters": [
+				{
+					"name": "a",
+					"type": "select",
+					"label": {
+						"en_US": "A"
+					},
+					"human_description": {
+						"en_US": "Select A"
+					},
+					"form": "form",
+					"required": true,
+					"options": [
+						{
+							"value": "foo",
+							"label": {
+								"en_US": "Foo"
+							}
+						}
+					]
+				},
+				{
+					"name": "b",
+					"type": "dynamic-select",
+					"label": {
+						"en_US": "B"
+					},
+					"human_description": {
+						"en_US": "Select B"
+					},
+					"form": "form",
+					"required": false,
+					"reset_on_change": [
+						"a"
+					]
+				}
+			]
+		}
+	]
+}
+`
+
+	const yamlData = `identity:
+  author: author
+  name: name
+  description:
+    en_US: description
+  icon: icon
+  label:
+    en_US: label
+  tags: []
+credentials_schema: []
+tools:
+  - identity:
+      author: author
+      name: tool
+      label:
+        en_US: label
+    description:
+      human:
+        en_US: description
+      llm: description
+    parameters:
+      - name: a
+        type: select
+        label:
+          en_US: A
+        human_description:
+          en_US: Select A
+        form: form
+        required: true
+        options:
+          - value: foo
+            label:
+              en_US: Foo
+      - name: b
+        type: dynamic-select
+        label:
+          en_US: B
+        human_description:
+          en_US: Select B
+        form: form
+        required: false
+        reset_on_change:
+          - a
+`
+
+	jsonDeclaration, jsonErr := UnmarshalToolProviderDeclaration([]byte(jsonData))
+	if jsonErr != nil {
+		t.Errorf("UnmarshalToolProviderDeclaration() error for JSON = %v", jsonErr)
+		return
+	}
+
+	jsonParam := jsonDeclaration.Tools[0].Parameters[1]
+	if len(jsonParam.ResetOnChange) != 1 || jsonParam.ResetOnChange[0] != "a" {
+		t.Errorf("Unexpected reset_on_change values for JSON: %v", jsonParam.ResetOnChange)
+		return
+	}
+
+	jsonBytes := parser.MarshalJsonBytes(jsonDeclaration)
+	jsonMap, err := parser.UnmarshalJsonBytes2Map(jsonBytes)
+	if err != nil {
+		t.Errorf("UnmarshalJsonBytes2Map() error = %v", err)
+		return
+	}
+
+	tools := jsonMap["tools"].([]any)
+	parameters := tools[0].(map[string]any)["parameters"].([]any)
+	resetOnChange := parameters[1].(map[string]any)["reset_on_change"].([]any)
+	if len(resetOnChange) != 1 || resetOnChange[0] != "a" {
+		t.Errorf("Expected serialized reset_on_change to be preserved, got %v", resetOnChange)
+		return
+	}
+
+	yamlDeclaration, yamlErr := parser.UnmarshalYamlBytes[ToolProviderDeclaration]([]byte(yamlData))
+	if yamlErr != nil {
+		t.Errorf("UnmarshalToolProviderDeclaration() error for YAML = %v", yamlErr)
+		return
+	}
+
+	yamlParam := yamlDeclaration.Tools[0].Parameters[1]
+	if len(yamlParam.ResetOnChange) != 1 || yamlParam.ResetOnChange[0] != "a" {
+		t.Errorf("Unexpected reset_on_change values for YAML: %v", yamlParam.ResetOnChange)
+		return
+	}
+
+	yamlText := parser.MarshalYaml(yamlDeclaration)
+	if !strings.Contains(yamlText, "reset_on_change:") || !strings.Contains(yamlText, "- a") {
+		t.Errorf("Expected YAML serialization to preserve reset_on_change, got %s", yamlText)
+		return
+	}
+
+	oldParam := jsonDeclaration.Tools[0].Parameters[0]
+	if oldParam.ResetOnChange == nil {
+		t.Errorf("Expected ResetOnChange to be initialized to empty slice, got nil")
+		return
+	}
+}
+
 func TestParameterOptionShowOn_Validate(t *testing.T) {
 	const jsonData = `
 {

@@ -20,17 +20,17 @@ type AgentStrategyIdentity struct {
 type AgentStrategyParameterType string
 
 const (
-	AGENT_STRATEGY_PARAMETER_TYPE_STRING         AgentStrategyParameterType = STRING
-	AGENT_STRATEGY_PARAMETER_TYPE_NUMBER         AgentStrategyParameterType = NUMBER
-	AGENT_STRATEGY_PARAMETER_TYPE_BOOLEAN        AgentStrategyParameterType = BOOLEAN
-	AGENT_STRATEGY_PARAMETER_TYPE_SELECT         AgentStrategyParameterType = SELECT
-	AGENT_STRATEGY_PARAMETER_TYPE_SECRET_INPUT   AgentStrategyParameterType = SECRET_INPUT
-	AGENT_STRATEGY_PARAMETER_TYPE_FILE           AgentStrategyParameterType = FILE
-	AGENT_STRATEGY_PARAMETER_TYPE_FILES          AgentStrategyParameterType = FILES
-	AGENT_STRATEGY_PARAMETER_TYPE_APP_SELECTOR   AgentStrategyParameterType = APP_SELECTOR
-	AGENT_STRATEGY_PARAMETER_TYPE_MODEL_SELECTOR AgentStrategyParameterType = MODEL_SELECTOR
-	AGENT_STRATEGY_PARAMETER_TYPE_TOOLS_SELECTOR     AgentStrategyParameterType = TOOLS_SELECTOR
-	AGENT_STRATEGY_PARAMETER_TYPE_ANY                AgentStrategyParameterType = ANY
+	AGENT_STRATEGY_PARAMETER_TYPE_STRING              AgentStrategyParameterType = STRING
+	AGENT_STRATEGY_PARAMETER_TYPE_NUMBER              AgentStrategyParameterType = NUMBER
+	AGENT_STRATEGY_PARAMETER_TYPE_BOOLEAN             AgentStrategyParameterType = BOOLEAN
+	AGENT_STRATEGY_PARAMETER_TYPE_SELECT              AgentStrategyParameterType = SELECT
+	AGENT_STRATEGY_PARAMETER_TYPE_SECRET_INPUT        AgentStrategyParameterType = SECRET_INPUT
+	AGENT_STRATEGY_PARAMETER_TYPE_FILE                AgentStrategyParameterType = FILE
+	AGENT_STRATEGY_PARAMETER_TYPE_FILES               AgentStrategyParameterType = FILES
+	AGENT_STRATEGY_PARAMETER_TYPE_APP_SELECTOR        AgentStrategyParameterType = APP_SELECTOR
+	AGENT_STRATEGY_PARAMETER_TYPE_MODEL_SELECTOR      AgentStrategyParameterType = MODEL_SELECTOR
+	AGENT_STRATEGY_PARAMETER_TYPE_TOOLS_SELECTOR      AgentStrategyParameterType = TOOLS_SELECTOR
+	AGENT_STRATEGY_PARAMETER_TYPE_ANY                 AgentStrategyParameterType = ANY
 	AGENT_STRATEGY_PARAMETER_TYPE_DYNAMIC_TREE_SELECT AgentStrategyParameterType = DYNAMIC_TREE_SELECT
 )
 
@@ -60,19 +60,20 @@ func init() {
 }
 
 type AgentStrategyParameter struct {
-	Name         string                     `json:"name" yaml:"name" validate:"required,gt=0,lt=1024"`
-	Label        I18nObject                 `json:"label" yaml:"label" validate:"required"`
-	Help         I18nObject                 `json:"help" yaml:"help" validate:"omitempty"`
-	Type         AgentStrategyParameterType `json:"type" yaml:"type" validate:"required,agent_strategy_parameter_type"`
-	AutoGenerate *ParameterAutoGenerate     `json:"auto_generate" yaml:"auto_generate" validate:"omitempty"`
-	Template     *ParameterTemplate         `json:"template" yaml:"template" validate:"omitempty"`
-	Scope        *string                    `json:"scope" yaml:"scope" validate:"omitempty,max=1024,is_scope"`
-	Required     bool                       `json:"required" yaml:"required"`
-	Default      any                        `json:"default" yaml:"default" validate:"omitempty,is_basic_type"`
-	Min          *float64                   `json:"min" yaml:"min" validate:"omitempty"`
-	Max          *float64                   `json:"max" yaml:"max" validate:"omitempty"`
-	Precision    *int                       `json:"precision" yaml:"precision" validate:"omitempty"`
-	Options      []ParameterOption          `json:"options" yaml:"options" validate:"omitempty,dive"`
+	Name          string                     `json:"name" yaml:"name" validate:"required,gt=0,lt=1024"`
+	Label         I18nObject                 `json:"label" yaml:"label" validate:"required"`
+	Help          I18nObject                 `json:"help" yaml:"help" validate:"omitempty"`
+	Type          AgentStrategyParameterType `json:"type" yaml:"type" validate:"required,agent_strategy_parameter_type"`
+	AutoGenerate  *ParameterAutoGenerate     `json:"auto_generate" yaml:"auto_generate" validate:"omitempty"`
+	Template      *ParameterTemplate         `json:"template" yaml:"template" validate:"omitempty"`
+	Scope         *string                    `json:"scope" yaml:"scope" validate:"omitempty,max=1024,is_scope"`
+	Required      bool                       `json:"required" yaml:"required"`
+	Default       any                        `json:"default" yaml:"default" validate:"omitempty,is_basic_type"`
+	Min           *float64                   `json:"min" yaml:"min" validate:"omitempty"`
+	Max           *float64                   `json:"max" yaml:"max" validate:"omitempty"`
+	Precision     *int                       `json:"precision" yaml:"precision" validate:"omitempty"`
+	Options       []ParameterOption          `json:"options" yaml:"options" validate:"omitempty,dive"`
+	ResetOnChange []string                   `json:"reset_on_change,omitempty" yaml:"reset_on_change,omitempty" validate:"omitempty,dive,gt=0,lt=1024"`
 }
 
 type AgentStrategyOutputSchema map[string]any
