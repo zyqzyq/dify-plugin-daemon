@@ -292,7 +292,7 @@ type ProviderConfig struct {
 	Help          *I18nObject    `json:"help" validate:"omitempty"`
 	URL           *string        `json:"url" validate:"omitempty"`
 	Placeholder   *I18nObject    `json:"placeholder" validate:"omitempty"`
-	ResetOnChange []string       `json:"reset_on_change,omitempty" yaml:"reset_on_change,omitempty" validate:"omitempty,dive,gt=0,lt=1024"`
+	ResetOnChange []string       `json:"reset_on_change,omitempty" yaml:"reset_on_change,omitempty" validate:"omitempty,lte=16,dive,gt=0,lt=1024"`
 }
 
 func init() {

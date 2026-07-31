@@ -548,7 +548,7 @@ type ModelProviderCredentialFormSchema struct {
 	Placeholder   *I18nObject                     `json:"placeholder" yaml:"placeholder" validate:"omitempty"`
 	MaxLength     int                             `json:"max_length" yaml:"max_length"`
 	ShowOn        []ModelProviderFormShowOnObject `json:"show_on" yaml:"show_on" validate:"omitempty,lte=16,dive"`
-	ResetOnChange []string                        `json:"reset_on_change,omitempty" yaml:"reset_on_change,omitempty" validate:"omitempty,dive,gt=0,lt=1024"`
+	ResetOnChange []string                        `json:"reset_on_change,omitempty" yaml:"reset_on_change,omitempty" validate:"omitempty,lte=16,dive,gt=0,lt=1024"`
 }
 
 func (m *ModelProviderCredentialFormSchema) UnmarshalJSON(data []byte) error {

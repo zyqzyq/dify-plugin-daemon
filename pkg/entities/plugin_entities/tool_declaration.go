@@ -151,7 +151,7 @@ type ToolParameter struct {
 	Options               []ParameterOption           `json:"options" yaml:"options" validate:"omitempty,dive"`
 	DynamicSelectLazyLoad bool                        `json:"dynamic_select_lazy_load,omitempty" yaml:"dynamic_select_lazy_load,omitempty" validate:"omitempty"`
 	ShowOn                []ToolParameterShowOnObject `json:"show_on" yaml:"show_on" validate:"omitempty,lte=16,dive"`
-	ResetOnChange         []string                    `json:"reset_on_change" yaml:"reset_on_change" validate:"omitempty,dive,gt=0,lt=1024"`
+	ResetOnChange         []string                    `json:"reset_on_change,omitempty" yaml:"reset_on_change,omitempty" validate:"omitempty,lte=16,dive,gt=0,lt=1024"`
 }
 
 func (t *ToolParameter) UnmarshalJSON(data []byte) error {
@@ -168,10 +168,6 @@ func (t *ToolParameter) UnmarshalJSON(data []byte) error {
 
 	if t.ShowOn == nil {
 		t.ShowOn = []ToolParameterShowOnObject{}
-	}
-
-	if t.ResetOnChange == nil {
-		t.ResetOnChange = []string{}
 	}
 
 	if t.Options == nil {
@@ -195,10 +191,6 @@ func (t *ToolParameter) UnmarshalYAML(value *yaml.Node) error {
 
 	if t.ShowOn == nil {
 		t.ShowOn = []ToolParameterShowOnObject{}
-	}
-
-	if t.ResetOnChange == nil {
-		t.ResetOnChange = []string{}
 	}
 
 	if t.Options == nil {

@@ -1444,6 +1444,10 @@ tools:
 		t.Errorf("Expected serialized reset_on_change to be preserved, got %v", resetOnChange)
 		return
 	}
+	if _, ok := parameters[0].(map[string]any)["reset_on_change"]; ok {
+		t.Errorf("Expected reset_on_change to be omitted when not configured, got %v", parameters[0])
+		return
+	}
 
 	yamlDeclaration, yamlErr := parser.UnmarshalYamlBytes[ToolProviderDeclaration]([]byte(yamlData))
 	if yamlErr != nil {
@@ -1463,9 +1467,15 @@ tools:
 		return
 	}
 
-	oldParam := jsonDeclaration.Tools[0].Parameters[0]
-	if oldParam.ResetOnChange == nil {
-		t.Errorf("Expected ResetOnChange to be initialized to empty slice, got nil")
+	yamlMap, err := parser.UnmarshalYaml2Map([]byte(yamlText))
+	if err != nil {
+		t.Errorf("UnmarshalYaml2Map() error = %v", err)
+		return
+	}
+	yamlTools := yamlMap["tools"].([]any)
+	yamlParameters := yamlTools[0].(map[string]any)["parameters"].([]any)
+	if _, ok := yamlParameters[0].(map[string]any)["reset_on_change"]; ok {
+		t.Errorf("Expected reset_on_change to be omitted from YAML when not configured, got %v", yamlParameters[0])
 		return
 	}
 }
